@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 // Middlewares //
@@ -24,13 +24,23 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const JobsCollection = client.db("NexHire").collection("HotJobs");
+    const HotJobsCollection = client.db("NexHire").collection("HotJobs");
 
     // GET ALL HOT JOBS //
 
     app.get("/hotJobs", async (req, res) => {
-      const cursor = JobsCollection.find();
+      const cursor = HotJobsCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // GET A SINGLE HOT JOB //
+
+    app.get("/hotJobs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await HotJobsCollection.findOne(query);
       res.send(result);
     });
   } finally {
