@@ -24,6 +24,15 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const JobsCollection = client.db("NexHire").collection("Jobs");
+
+    // GET ALL JOBS //
+
+    app.get("/jobs", async (req, res) => {
+      const cursor = JobsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
