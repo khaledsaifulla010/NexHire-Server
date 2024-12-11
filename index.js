@@ -24,11 +24,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const JobsCollection = client.db("NexHire").collection("Jobs");
+    const JobsCollection = client.db("NexHire").collection("HotJobs");
 
-    // GET ALL JOBS //
+    // GET ALL HOT JOBS //
 
-    app.get("/jobs", async (req, res) => {
+    app.get("/hotJobs", async (req, res) => {
       const cursor = JobsCollection.find();
       const result = await cursor.toArray();
       res.send(result);
