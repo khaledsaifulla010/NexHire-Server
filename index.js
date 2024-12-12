@@ -43,6 +43,18 @@ async function run() {
       const result = await HotJobsCollection.findOne(query);
       res.send(result);
     });
+
+    // POST A JOB APPLICATION //
+
+    const jobApplicationCollection = client
+      .db("NexHire")
+      .collection("JobApplication");
+
+    app.post("/job_application", async (req, res) => {
+      const application = req.body;
+      const result = await jobApplicationCollection.insertOne(application);
+      res.send(result);
+    });
   } finally {
   }
 }
