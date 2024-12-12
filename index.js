@@ -85,6 +85,15 @@ async function run() {
       res.send(result);
     });
 
+    // GET A JOB DETAILS //
+    app.get("/allJobs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await AllJobsCollection.findOne(query);
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
