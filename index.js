@@ -77,6 +77,15 @@ async function run() {
       const result = await jobApplicationCollection.insertOne(application);
       res.send(result);
     });
+
+    // POST A JOB FROM REQRUITER OR ADMIN //
+    const AllJobsCollection = client.db("NexHire").collection("AllJobs");
+
+    app.post("/jobs", async (req, res) => {
+      const newJob = req.body;
+      const result = await AllJobsCollection.insertOne(newJob);
+      res.send(result);
+    });
   } finally {
   }
 }
