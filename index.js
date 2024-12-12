@@ -50,6 +50,19 @@ async function run() {
       const email = req.query.email;
       const query = { applicant_email: email };
       const result = await jobApplicationCollection.find(query).toArray();
+
+      // Not Best Way //
+
+      for (const application of result) {
+        const query1 = { _id: new ObjectId(application.job_id) };
+        const job = await HotJobsCollection.findOne(query1);
+        if (job) {
+          application.title = job.title;
+          application.company = job.company;
+          application.company_logo = job.company_logo;
+        }
+      }
+
       res.send(result);
     });
 
