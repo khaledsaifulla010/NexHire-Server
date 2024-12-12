@@ -94,6 +94,25 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL JOBS DATA USING USER INDIBIDUALLY EMAIL //
+    app.get("/job_application", async (req, res) => {
+      const email = req.query.email;
+      const query = { applicant_email: email };
+      const result = await jobApplicationCollection.find(query).toArray();
+
+      for (const apply of result) {
+        const query2 = { _id: new ObjectId(apply.job_id) };
+        const newJob = await AllJobsCollection.findOne(query2);
+
+        if (newJob) {
+          apply.title = newJob.title;
+          apply.company = newJob.company;
+          apply.company_logo = apply.company_logo;
+        }
+      }
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
