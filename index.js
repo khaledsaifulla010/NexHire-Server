@@ -74,14 +74,14 @@ async function run() {
     });
     // GET ALL JOBS OF INDIBIDAL RECRUITER //
 
-    app.get("/allJobs", async (req, res) => {
+    app.get("/allJobsOfRecruiter", async (req, res) => {
       const email = req.query.email;
       let query = {};
-
       if (email) {
         query = { hr_email: email };
       }
-      const result = await AllJobsCollection.find(query).toArray();
+      const cursor = AllJobsCollection.find(query);
+      const result = await cursor.toArray();
       res.send(result);
     });
 
