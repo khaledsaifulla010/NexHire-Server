@@ -66,6 +66,25 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL JOBS //
+
+    app.get("/allJobs", async (req, res) => {
+      const result = await AllJobsCollection.find().toArray();
+      res.send(result);
+    });
+    // GET ALL JOBS OF INDIBIDAL RECRUITER //
+
+    app.get("/allJobs", async (req, res) => {
+      const email = req.query.email;
+      let query = {};
+
+      if (email) {
+        query = { hr_email: email };
+      }
+      const result = await AllJobsCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
@@ -81,7 +100,7 @@ async function run() {
     // POST A JOB FROM REQRUITER OR ADMIN //
     const AllJobsCollection = client.db("NexHire").collection("AllJobs");
 
-    app.post("/jobs", async (req, res) => {
+    app.post("/allJobs", async (req, res) => {
       const newJob = req.body;
       const result = await AllJobsCollection.insertOne(newJob);
       res.send(result);
