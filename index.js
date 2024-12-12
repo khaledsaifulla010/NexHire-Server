@@ -44,13 +44,22 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL DATA USING USER INDIBIDUALLY EMAIL //
+
+    app.get("/job_application", async (req, res) => {
+      const email = req.query.email;
+      const query = { applicant_email: email };
+      const result = await jobApplicationCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
       .db("NexHire")
       .collection("JobApplication");
 
-    app.post("/job_application", async (req, res) => {
+    app.post("/job_applications", async (req, res) => {
       const application = req.body;
       const result = await jobApplicationCollection.insertOne(application);
       res.send(result);
