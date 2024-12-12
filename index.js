@@ -113,6 +113,16 @@ async function run() {
       res.send(result);
     });
 
+    // ALL JOB APPLICANTS DATA //
+
+    app.get("/job_application/:job_id", async (req, res) => {
+      const jobId = req.params.job_id;
+      const query = { job_id: jobId };
+      const result = await jobApplicationCollection.find(query).toArray();
+
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
@@ -122,6 +132,34 @@ async function run() {
     app.post("/job_applications", async (req, res) => {
       const application = req.body;
       const result = await jobApplicationCollection.insertOne(application);
+
+      //NOT THE BEST WAY (USE AGGREGATE) //
+
+      const id = application.job_id;
+      const query = { _id: new ObjectId(id) };
+
+      const job = await AllJobsCollection.findOne(query);
+
+      let newCount = 0;
+      if (job.applicationCount) {
+        newCount = job.applicationCount + 1;
+      } else {
+        newCount = 1;
+      }
+
+      // now update the job info
+
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          applicationCount: newCount,
+        },
+      };
+      const updatedResult = await AllJobsCollection.updateOne(
+        filter,
+        updatedDoc
+      );
+
       res.send(result);
     });
 
