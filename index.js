@@ -171,6 +171,24 @@ async function run() {
       const result = await AllJobsCollection.insertOne(newJob);
       res.send(result);
     });
+
+    // POST STATUS OF JOBS //
+
+    app.patch("/job_application/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: data.status,
+        },
+      };
+      const result = await jobApplicationCollection.updateOne(
+        filter,
+        updatedDoc
+      );
+      res.send(result);
+    });
   } finally {
   }
 }
