@@ -113,13 +113,21 @@ async function run() {
       res.send(result);
     });
 
-    // ALL JOB APPLICANTS DATA //
+    // GET ALL JOB APPLICANTS DATA //
 
     app.get("/job_application/:job_id", async (req, res) => {
       const jobId = req.params.job_id;
       const query = { job_id: jobId };
       const result = await jobApplicationCollection.find(query).toArray();
 
+      res.send(result);
+    });
+
+    // GET ALL BLOGS DATA //
+    const BlogsCollection = client.db("NexHire").collection("Blogs");
+
+    app.get("/blogs", async (req, res) => {
+      const result = await BlogsCollection.find().toArray();
       res.send(result);
     });
 
