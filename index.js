@@ -131,6 +131,17 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL TOP RECRUITER COMPANY DATA //
+
+    const TopRecruiterCompanyCollection = client
+      .db("NexHire")
+      .collection("TopRecruiterCompany");
+
+    app.get("/topRecruiterCompany", async (req, res) => {
+      const result = await TopRecruiterCompanyCollection.find().toArray();
+      res.send(result);
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
