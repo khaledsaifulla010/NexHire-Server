@@ -36,16 +36,16 @@ async function run() {
 
     app.post("/jwt", async (req, res) => {
       const user = req.body;
-      // const token = jwt.sign(user, "secret", { expiresIn: "1h" });
-      const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1h" });
-      // Set JWT in an HTTP-only cookie
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "5h",
+      });
+
       res
         .cookie("token", token, {
           httpOnly: true,
           secure: false,
-          sameSite: "none",
         })
-        .send({ sucess: true });
+        .send({ success: true });
     });
 
     const HotJobsCollection = client.db("NexHire").collection("HotJobs");
@@ -70,9 +70,14 @@ async function run() {
 
     // GET ALL DATA USING USER INDIBIDUALLY EMAIL //
 
-    app.get("/job_application", async (req, res) => {
+    app.get("/job_application", verifyToken, async (req, res) => {
       const email = req.query.email;
       const query = { applicant_email: email };
+
+      if (req.user.email !== req.query.email) {
+        return res.status(403).send({ message: "Forbidden Access" });
+      }
+
       const result = await jobApplicationCollection.find(query).toArray();
 
       // Not Best Way //
