@@ -33,7 +33,14 @@ async function run() {
       const user = req.body;
       // const token = jwt.sign(user, "secret", { expiresIn: "1h" });
       const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1h" });
-      res.send(token);
+      // Set JWT in an HTTP-only cookie
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "none",
+        })
+        .send({ sucess: true });
     });
 
     const HotJobsCollection = client.db("NexHire").collection("HotJobs");
