@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const app = express();
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -24,6 +25,14 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    // AUTH RELATED APIS //
+
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, "secret", { expiresIn: "1h" });
+      res.send(token);
+    });
+
     const HotJobsCollection = client.db("NexHire").collection("HotJobs");
 
     // GET ALL HOT JOBS //
