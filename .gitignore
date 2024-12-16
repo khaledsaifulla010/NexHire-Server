@@ -1,3 +1,4 @@
 node_modules
 .env
 _jwt_token_steps_.js
+.vercel
