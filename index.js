@@ -18,6 +18,23 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// VERIFY TOKEN //
+
+const verifyToken = (req, res, next) => {
+  const token = req?.cookies?.token;
+  if (!token) {
+    return res.status(401).send({ message: "Unothorized User Access" });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unothorized User Access" });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
 // MONGO BD CONNECTION //
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ugbxhsw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -42,6 +59,15 @@ async function run() {
 
       res
         .cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+        })
+        .send({ success: true });
+    });
+
+    app.post("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
           httpOnly: true,
           secure: false,
         })
