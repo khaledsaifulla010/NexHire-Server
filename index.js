@@ -11,7 +11,11 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      "http://localhost:5173",
+      "https://nexhire-8ec30.web.app",
+      "https://nexhire-8ec30.firebaseapp.com",
+    ],
     credentials: true,
   })
 );
