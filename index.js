@@ -203,6 +203,13 @@ async function run() {
       res.send(result);
     });
 
+    // GET TOTAL JOBS COUNT //
+
+    app.get("/allJobsCount", async (req, res) => {
+      const count = await AllJobsCollection.estimatedDocumentCount();
+      res.send({ count });
+    });
+
     // POST A JOB APPLICATION //
 
     const jobApplicationCollection = client
